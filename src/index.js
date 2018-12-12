@@ -29,19 +29,19 @@ function querySearch(url) {
    */
   let res = {};
   if (url) {
-    let temp = url.split('?')[1];
+    let temp = url.split("?")[1];
 
     if (temp) {
-      temp.split('&').forEach((value, index, arr) => {
-        if (value.indexOf('=') > -1) {
-          res[value.split('=')[0]] = value.split('=')[1]
+      temp.split("&").forEach((value, index, arr) => {
+        if (value.indexOf("=") > -1) {
+          res[value.split("=")[0]] = value.split("=")[1];
         } else {
-          res[value.split('#')[0]] = ""
+          res[value.split("#")[0]] = "";
         }
-      })
+      });
     }
   }
-  return res
+  return res;
 }
 
 /********************第 3 题**********************/
@@ -110,8 +110,8 @@ function clone(originObj) {
   var result = Array.isArray(originObj) ? [] : {};
   for (var key in originObj) {
     if (originObj.hasOwnProperty(key)) {
-      if (typeof originObj[key] === 'object') {
-        result[key] = clone(originObj[key]);   //递归复制
+      if (typeof originObj[key] === "object") {
+        result[key] = clone(originObj[key]); //递归复制
       } else {
         result[key] = originObj[key];
       }
@@ -133,6 +133,44 @@ function findFibonacci(arr) {
   /**
    * 此处写代码逻辑
    */
+  let resultList = [];
+  //key:输入数组中的元素，value:该元素下标。该map可以以O（1）的时间快速从数组中查找某个数是否存在
+  let map = new Map();
+
+  //step1:升序排列数组
+  arr.sort((a, b) => {
+    return a - b;
+  });
+  //step2:初始化map
+  for (let i = 0; i < arr.length; i++) {
+    map.set(arr[i], i);
+  }
+  //step3:遍历数组，找到第一组斐波那契额数f1,f2,f3，放入resulList
+  let f1, f2, f3; //f1代表斐波那契第一个数，f2代表第二个数
+  let i = 0;
+  while (i < arr.length) {
+    f1 = inputArr[i];
+    f2 = inputArr[i + 1];
+    f3 = f1 + f2;
+    if (map.get(f3) != null) {
+      //f3在数组中存在
+      resultList.push(f1);
+      resultList.push(f2);
+      resultList.push(f3);
+      break;
+    } else {
+      //找不到改变f1,f2
+      i++;
+    }
+  }
+  //step4:现在resultList含有3个数字  3,5,8，我们把5当成f1,8当成f2，去数组中找5+8,若存在这个13，把13放进列表，现在列表中是3,5,8,13，以此类推，把8作为f1,13为f2,去数组找f1+f2
+  while (true) {
+    f1 = resultList[resultList.length - 2];
+    f2 = resultList[resultList.length - 1];
+    if (map.get(f1 + f2) != null) resultList.push(f1 + f2);
+    else break;
+  }
+  console.info(resultList);
 }
 
 //==============================答题部分 end================================
